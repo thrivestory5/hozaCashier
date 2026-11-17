@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="KopiKita POS">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20width=%22100%22%20height=%22100%22><text y=%22.9em%22 font-size=%2290%22>☕</text></svg>">
+  
+  <title>KopiKita - Kasir Cafe Mobile</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            amber: {
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased select-none pb-20">
+
+  <!-- ================= TOP MOBILE HEADER ================= -->
+  <header class="sticky top-0 z-30 bg-slate-900/95 backdrop-blur-md border-b border-slate-800/80 px-4 pt-safe pb-2.5 shadow-sm">
+    <div class="flex items-center justify-between mb-2">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-lg">
+          ☕
+        </div>
+        <div>
+          <h1 id="header-cafe-name" class="text-sm font-extrabold tracking-tight text-slate-100 leading-tight">Kopi Kita Cafe</h1>
+          <p class="text-[10px] font-semibold text-amber-400">Mobile POS Kasir</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800/80 border border-slate-700/60 text-xs text-slate-300">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="live-clock" class="font-mono text-[11px] font-bold">12:00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Search Bar (Only shown on POS view) -->
+    <div id="header-search-bar" class="relative">
+      <input 
+        id="search-menu-input"
+        type="search" 
+        placeholder="Cari kopi, mie, snack..." 
+        class="w-full bg-slate-800/90 border border-slate-700/70 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-100 placeholder-slate-400 focus:outline-none focus:border-amber-500/80 transition-all">
+      <span class="absolute left-3 top-2.5 text-slate-400 text-xs">🔍</span>
+    </div>
+  </header>
+
+  <!-- ================= TAB 1: KASIR / POS ================= -->
+  <main id="tab-pos" class="tab-pane flex-1 flex flex-col p-3 space-y-3">
+    <!-- Category Filter Bar (Smooth Touch Scroll) -->
+    <div id="category-list" class="flex gap-2 overflow-x-auto no-scrollbar py-1">
+      <!-- Injected by app.js -->
+    </div>
+
+    <!-- Products Grid (Optimized 2-Column for Phone) -->
+    <div id="menu-grid" class="grid grid-cols-2 gap-2.5 pb-24">
+      <!-- Injected by app.js -->
+    </div>
+  </main>
+
+  <!-- ================= TAB 2: RIWAYAT & REKAP ================= -->
+  <main id="tab-history" class="tab-pane hidden flex-1 flex flex-col p-3 space-y-3 pb-24">
+    <!-- Today's Summary Card -->
+    <div class="bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700/80 rounded-2xl p-4 shadow-lg">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">Rekap Hari Ini</span>
+        <span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold">Live</span>
+      </div>
+
+      <div class="mb-3">
+        <p class="text-[11px] text-slate-400">Total Pendapatan</p>
+        <h2 id="stat-today-revenue" class="text-2xl font-black text-amber-400 font-mono tracking-tight">Rp 0</h2>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 pt-3 border-t border-slate-700/60">
+        <div class="bg-slate-800/60 rounded-xl p-2.5 border border-slate-700/40">
+          <p class="text-[10px] text-slate-400">Total Transaksi</p>
+          <p id="stat-today-orders" class="text-lg font-extrabold text-slate-100">0</p>
+        </div>
+        <div class="bg-slate-800/60 rounded-xl p-2.5 border border-slate-700/40">
+          <p class="text-[10px] text-slate-400">Item Terjual</p>
+          <p id="stat-today-items" class="text-lg font-extrabold text-slate-100">0</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transaction List Header -->
+    <div class="flex items-center justify-between px-1 pt-1">
+      <h3 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Daftar Transaksi</h3>
+      <span class="text-[11px] text-slate-500">Otomatis tersimpan</span>
+    </div>
+
+    <!-- List of Transactions -->
+    <div id="history-list" class="space-y-2.5">
+      <!-- Injected by app.js -->
+    </div>
+  </main>
+
+  <!-- ================= TAB 3: KELOLA MENU & KAFE ================= -->
+  <main id="tab-manage" class="tab-pane hidden flex-1 flex flex-col p-3 space-y-4 pb-28">
+    <!-- Action Banner: Add Menu Item -->
+    <div class="flex items-center justify-between bg-slate-800/90 border border-slate-700/80 rounded-2xl p-3.5 shadow-sm">
+      <div>
+        <h3 class="text-sm font-bold text-slate-100">Daftar Menu Kafe</h3>
+        <p class="text-xs text-slate-400">Atur ketersediaan & harga</p>
+      </div>
+      <button 
+        id="open-add-menu-modal"
+        class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md tap-bounce">
+        <span>+</span> Tambah Menu
+      </button>
+    </div>
+
+    <!-- Menu Items List -->
+    <div id="manage-menu-list" class="space-y-2">
+      <!-- Injected by app.js -->
+    </div>
+
+    <!-- Cafe Settings Card -->
+    <div class="bg-slate-800/70 border border-slate-700/70 rounded-2xl p-4 space-y-3">
+      <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+        <span>⚙️</span> Profil Kafe & Struk
+      </h3>
+
+      <div class="space-y-2 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">Nama Kafe</label>
+          <input id="setting-cafe-name" type="text" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none focus:border-amber-500">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Slogan / Tagline</label>
+          <input id="setting-cafe-tagline" type="text" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none focus:border-amber-500">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Alamat Kafe</label>
+          <input id="setting-address" type="text" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none focus:border-amber-500">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">No. WhatsApp / Telepon</label>
+          <input id="setting-phone" type="tel" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none focus:border-amber-500">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-400 mb-1">Nama Kasir / Barista</label>
+            <input id="setting-cashier" type="text" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none focus:border-amber-500">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Pajak (%)</label>
+            <input id="setting-tax" type="number" min="0" max="100" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none focus:border-amber-500">
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Pesan Footer Struk</label>
+          <textarea id="setting-footer" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none focus:border-amber-500"></textarea>
+        </div>
+      </div>
+
+      <button 
+        id="save-settings-btn"
+        class="w-full bg-slate-700 hover:bg-slate-600 text-amber-400 font-bold py-2.5 rounded-xl text-xs tap-bounce transition-all">
+        Simpan Profil Kafe
+      </button>
+    </div>
+
+    <!-- Data Backup & Reset Card -->
+    <div class="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-4 space-y-2.5">
+      <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Cadangan Data (Backup)</h3>
+      <p class="text-[11px] text-slate-400">Simpan atau pindahkan data transaksi & menu ke HP lain secara aman.</p>
+      
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <button 
+          id="export-data-btn"
+          class="bg-slate-700/80 hover:bg-slate-700 text-slate-200 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 tap-bounce">
+          <span>📤</span> Export JSON
+        </button>
+        <label 
+          class="bg-slate-700/80 hover:bg-slate-700 text-slate-200 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer tap-bounce">
+          <span>📥</span> Import JSON
+          <input id="import-file-input" type="file" accept=".json" class="hidden">
+        </label>
+      </div>
+
+      <div class="pt-2 text-center">
+        <button 
+          id="reset-default-btn"
+          class="text-[11px] text-rose-400 hover:underline">
+          Kembalikan Menu ke Contoh Awal
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= STICKY FLOATING CART BAR (Mobile POS Bottom Bar) ================= -->
+  <div 
+    id="floating-cart-bar" 
+    class="fixed bottom-16 left-3 right-3 z-30 transform transition-all duration-300 translate-y-32 opacity-0 pointer-events-none cursor-pointer">
+    <div class="bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 rounded-2xl p-3.5 flex items-center justify-between shadow-xl shadow-amber-500/25 tap-bounce border border-amber-400/40">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-slate-950/15 flex items-center justify-center text-xl font-black">
+          🛒
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span id="floating-cart-count" class="text-xs font-extrabold uppercase px-2 py-0.5 rounded-full bg-slate-950 text-amber-400">0 Item</span>
+          </div>
+          <p id="floating-cart-total" class="text-base font-black leading-tight mt-0.5 font-mono">Rp 0</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-1 font-bold text-xs bg-slate-950 text-slate-100 px-3.5 py-2.5 rounded-xl shadow">
+        <span>Bayar</span>
+        <span>→</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= BOTTOM NAVIGATION BAR ================= -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 pb-safe">
+    <div class="grid grid-cols-3 h-14 max-w-md mx-auto">
+      <button data-tab="pos" class="nav-tab-btn flex flex-col items-center justify-center text-amber-400 tap-bounce transition-colors">
+        <span class="nav-icon text-lg">☕</span>
+        <span class="nav-label text-[10px] font-bold mt-0.5">Kasir POS</span>
+      </button>
+
+      <button data-tab="history" class="nav-tab-btn flex flex-col items-center justify-center text-slate-400 hover:text-slate-200 tap-bounce transition-colors">
+        <span class="nav-icon text-lg">📊</span>
+        <span class="nav-label text-[10px] mt-0.5">Riwayat & Rekap</span>
+      </button>
+
+      <button data-tab="manage" class="nav-tab-btn flex flex-col items-center justify-center text-slate-400 hover:text-slate-200 tap-bounce transition-colors">
+        <span class="nav-icon text-lg">⚙️</span>
+        <span class="nav-label text-[10px] mt-0.5">Kelola Kafe</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ================= BOTTOM SHEET: CART & CHECKOUT ================= -->
+  <div id="cart-sheet-modal" class="sheet-backdrop hidden fixed inset-0 z-50 flex flex-col justify-end">
+    <!-- Dark Backdrop -->
+    <div id="cart-sheet-backdrop" class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm"></div>
+
+    <!-- Sheet Content Container -->
+    <div class="sheet-content relative bg-slate-900 border-t border-slate-700/80 rounded-t-3xl max-h-[90vh] flex flex-col shadow-2xl z-10 pb-safe">
+      <!-- Sheet Drag Handle / Top Header -->
+      <div class="pt-3 pb-2 px-4 flex flex-col items-center border-b border-slate-800">
+        <div class="w-12 h-1.5 bg-slate-700 rounded-full mb-3"></div>
+        <div class="w-full flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <h3 class="text-base font-extrabold text-slate-100">Pesanan Pelanggan</h3>
+            <button id="clear-cart-btn" class="text-[11px] text-rose-400 hover:underline">Hapus Semua</button>
+          </div>
+          <button id="close-cart-btn" class="w-8 h-8 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center font-bold text-sm tap-bounce">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Sheet Scrollable Body -->
+      <div class="overflow-y-auto p-4 space-y-4 no-scrollbar">
+        <!-- Order Type & Table Selection -->
+        <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-3 space-y-2.5">
+          <!-- Dine In / Take Away Chips -->
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" data-type="Dine In" class="order-type-chip py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 tap-bounce">
+              🍽️ Dine In (Di Tempat)
+            </button>
+            <button type="button" data-type="Take Away" class="order-type-chip py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 tap-bounce">
+              🛍️ Take Away (Bungkus)
+            </button>
+          </div>
+
+          <!-- Customer Name & Table Number -->
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div>
+              <label class="block text-slate-400 text-[10px] mb-1 font-semibold">Nama Pelanggan</label>
+              <input id="customer-name-input" type="text" placeholder="Cth: Mas Budi" class="w-full bg-slate-900/90 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500">
+            </div>
+            <div>
+              <label class="block text-slate-400 text-[10px] mb-1 font-semibold">No. Meja</label>
+              <input id="table-number-input" type="text" placeholder="Cth: 05" class="w-full bg-slate-900/90 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500">
+            </div>
+          </div>
+
+          <!-- Quick Table Chips -->
+          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1">
+            <span class="text-[10px] text-slate-400 font-semibold whitespace-nowrap">Meja:</span>
+            <button type="button" data-table="1" class="table-chip text-[10px] px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300 tap-bounce">1</button>
+            <button type="button" data-table="2" class="table-chip text-[10px] px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300 tap-bounce">2</button>
+            <button type="button" data-table="3" class="table-chip text-[10px] px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300 tap-bounce">3</button>
+            <button type="button" data-table="4" class="table-chip text-[10px] px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300 tap-bounce">4</button>
+            <button type="button" data-table="Bar" class="table-chip text-[10px] px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300 tap-bounce">Bar</button>
+          </div>
+        </div>
+
+        <!-- Items Ordered List -->
+        <div>
+          <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Daftar Item</h4>
+          <div id="cart-items-list" class="space-y-2">
+            <!-- Injected by app.js -->
+          </div>
+          <div id="cart-empty-state" class="hidden text-center py-6 text-slate-500 text-xs">
+            Keranjang masih kosong
+          </div>
+        </div>
+
+        <!-- Payment Method Selection -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Metode Pembayaran</h4>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" data-method="Tunai" class="payment-method-btn py-2 px-2 rounded-xl text-xs font-bold border border-amber-500 bg-amber-500/10 text-amber-400 tap-bounce flex items-center justify-center gap-1.5">
+              <span>💵</span> Tunai
+            </button>
+            <button type="button" data-method="QRIS" class="payment-method-btn py-2 px-2 rounded-xl text-xs font-semibold border border-slate-700 text-slate-300 tap-bounce flex items-center justify-center gap-1.5">
+              <span>📱</span> QRIS
+            </button>
+            <button type="button" data-method="Transfer" class="payment-method-btn py-2 px-2 rounded-xl text-xs font-semibold border border-slate-700 text-slate-300 tap-bounce flex items-center justify-center gap-1.5">
+              <span>🏦</span> Transfer
+            </button>
+          </div>
+        </div>
+
+        <!-- Cash Payment Section -->
+        <div id="cash-section" class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-3 space-y-2.5">
+          <label class="block text-xs font-semibold text-slate-300">Uang Tunai Diterima</label>
+          <div class="relative">
+            <span class="absolute left-3 top-2.5 text-xs text-amber-400 font-bold">Rp</span>
+            <input 
+              id="cash-input" 
+              type="number" 
+              placeholder="0" 
+              class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-10 pr-3 py-2 text-sm font-mono font-bold text-slate-100 focus:outline-none focus:border-amber-500">
+          </div>
+
+          <!-- Quick Cash Chips -->
+          <div id="cash-quick-chips" class="flex flex-wrap gap-1.5 pt-1">
+            <!-- Injected by app.js -->
+          </div>
+        </div>
+
+        <!-- QRIS Simulated Info Section -->
+        <div id="qris-section" class="hidden bg-slate-800/60 border border-slate-700/60 rounded-2xl p-3 text-center space-y-1">
+          <div class="text-3xl">📱</div>
+          <p class="text-xs font-bold text-slate-200">Pembayaran Non-Tunai / QRIS</p>
+          <p class="text-[11px] text-slate-400">Tunjukkan barcode QRIS kafe kepada pelanggan lalu tekan tombol Selesaikan Transaksi.</p>
+        </div>
+
+        <!-- Summary Calculation Box -->
+        <div class="bg-slate-800/90 border border-slate-700/80 rounded-2xl p-3.5 space-y-1.5 text-xs">
+          <div class="flex justify-between text-slate-400">
+            <span>Subtotal</span>
+            <span id="sheet-subtotal" class="font-mono text-slate-200">Rp 0</span>
+          </div>
+          <div id="sheet-tax-row" class="hidden flex justify-between text-slate-400">
+            <span id="sheet-tax-label">Pajak (0%)</span>
+            <span id="sheet-tax" class="font-mono text-slate-200">Rp 0</span>
+          </div>
+          <div id="sheet-service-row" class="hidden flex justify-between text-slate-400">
+            <span id="sheet-service-label">Service (0%)</span>
+            <span id="sheet-service" class="font-mono text-slate-200">Rp 0</span>
+          </div>
+          <div class="flex justify-between items-center text-sm font-extrabold text-slate-100 pt-1.5 border-t border-slate-700">
+            <span>TOTAL TAGIHAN</span>
+            <span id="sheet-grandtotal" class="font-mono text-amber-400 text-base">Rp 0</span>
+          </div>
+          <div id="sheet-change-row" class="hidden flex justify-between items-center text-xs font-bold pt-1 border-t border-slate-700/60">
+            <span>Kembalian</span>
+            <span id="sheet-change-display" class="font-mono text-emerald-400 text-sm">Rp 0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sheet Footer Actions -->
+      <div id="cart-footer-actions" class="p-3 bg-slate-900 border-t border-slate-800">
+        <button 
+          id="process-payment-btn"
+          class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black py-3.5 rounded-2xl text-sm shadow-xl shadow-amber-500/20 tap-bounce transition-all">
+          Selesaikan Transaksi & Cetak
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: DIGITAL RECEIPT (STRUK KASIR) ================= -->
+  <div id="receipt-modal" class="modal-backdrop hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <!-- Backdrop -->
+    <div id="receipt-backdrop" class="absolute inset-0 bg-slate-950/80 backdrop-blur-md"></div>
+
+    <div class="modal-box relative w-full max-w-xs z-10 flex flex-col max-h-[92vh]">
+      <!-- Printable Thermal Paper Area -->
+      <div class="overflow-y-auto no-scrollbar rounded-2xl p-4 receipt-paper shadow-2xl">
+        <div id="receipt-printable-area">
+          <!-- Injected by app.js -->
+        </div>
+      </div>
+
+      <!-- Receipt Action Buttons (No Print) -->
+      <div class="no-print mt-3 space-y-2">
+        <div class="grid grid-cols-2 gap-2">
+          <button 
+            id="print-receipt-btn" 
+            class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 tap-bounce shadow-md">
+            <span>🖨️</span> Cetak Struk
+          </button>
+          <button 
+            id="share-whatsapp-btn" 
+            class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 tap-bounce shadow-md">
+            <span>📲</span> Kirim ke WA
+          </button>
+        </div>
+
+        <button 
+          id="close-receipt-btn" 
+          class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 rounded-xl text-xs tap-bounce">
+          Pesanan Baru / Selesai
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: TAMBAH MENU BARU ================= -->
+  <div id="add-menu-modal" class="modal-backdrop hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-slate-950/75 backdrop-blur-sm"></div>
+
+    <div class="modal-box relative w-full max-w-sm bg-slate-900 border border-slate-700 rounded-3xl p-4 z-10 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-slate-100">Tambah Menu Baru</h3>
+        <button id="close-add-menu-modal" class="text-slate-400 hover:text-slate-200 text-sm font-bold">✕</button>
+      </div>
+
+      <form id="add-menu-form" class="space-y-3 pt-3 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">Nama Menu</label>
+          <input id="new-menu-name" type="text" required placeholder="Cth: Avocado Coffee" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none focus:border-amber-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-400 mb-1">Kategori</label>
+            <select id="new-menu-category" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none focus:border-amber-500">
+              <option value="Kopi">Kopi</option>
+              <option value="Non-Kopi">Non-Kopi</option>
+              <option value="Makanan">Makanan</option>
+              <option value="Snack">Snack</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Ikon Emoji</label>
+            <input id="new-menu-icon" type="text" value="☕" maxlength="2" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 text-center text-lg focus:outline-none focus:border-amber-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1">Harga (Rp)</label>
+          <input id="new-menu-price" type="number" required placeholder="20000" min="500" step="500" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none focus:border-amber-500 font-mono">
+        </div>
+
+        <div class="pt-2">
+          <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs shadow-md tap-bounce">
+            Simpan Menu
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>
