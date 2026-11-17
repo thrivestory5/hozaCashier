@@ -3,14 +3,15 @@
  * Built specifically for smartphones & touch devices
  */
 
-// --- Initial Default Data ---
+const DATA_VERSION = "2.0"; // Bump to refresh default menu with real product photos
+
 const DEFAULT_SETTINGS = {
   cafeName: "Kopi Kita Cafe",
   cafeTagline: "Artisan Coffee & Good Vibes",
   address: "Jl. Sudirman No. 45, Jakarta",
   phone: "081234567890",
   cashierName: "Barista",
-  taxPercent: 0, // default 0% (bisa diaktifkan bila perlu)
+  taxPercent: 0,
   servicePercent: 0,
   receiptFooter: "Terima kasih atas kunjungannya!\nFollow IG kami @kopikita.cafe",
   currency: "Rp"
@@ -18,37 +19,177 @@ const DEFAULT_SETTINGS = {
 
 const DEFAULT_MENU = [
   // Kategori: Kopi
-  { id: "m1", name: "Es Kopi Susu Aren", category: "Kopi", price: 18000, icon: "☕", available: true },
-  { id: "m2", name: "Americano / Long Black", category: "Kopi", price: 15000, icon: "☕", available: true },
-  { id: "m3", name: "Caffe Latte", category: "Kopi", price: 22000, icon: "🥛", available: true },
-  { id: "m4", name: "Caramel Macchiato", category: "Kopi", price: 25000, icon: "🍯", available: true },
-  { id: "m5", name: "Espresso Single", category: "Kopi", price: 12000, icon: "☕", available: true },
-  { id: "m6", name: "Vanilla Cold Brew", category: "Kopi", price: 24000, icon: "🧊", available: true },
+  { 
+    id: "m1", 
+    name: "Es Kopi Susu Aren", 
+    category: "Kopi", 
+    price: 18000, 
+    image: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
+  { 
+    id: "m2", 
+    name: "Americano / Long Black", 
+    category: "Kopi", 
+    price: 15000, 
+    image: "https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
+  { 
+    id: "m3", 
+    name: "Caffe Latte", 
+    category: "Kopi", 
+    price: 22000, 
+    image: "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
+  { 
+    id: "m4", 
+    name: "Caramel Macchiato", 
+    category: "Kopi", 
+    price: 25000, 
+    image: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
+  { 
+    id: "m5", 
+    name: "Espresso Single", 
+    category: "Kopi", 
+    price: 12000, 
+    image: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
+  { 
+    id: "m6", 
+    name: "Vanilla Cold Brew", 
+    category: "Kopi", 
+    price: 24000, 
+    image: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
   
   // Kategori: Non-Kopi
-  { id: "m7", name: "Matcha Latte", category: "Non-Kopi", price: 23000, icon: "🍵", available: true },
-  { id: "m8", name: "Signature Dark Choco", category: "Non-Kopi", price: 22000, icon: "🍫", available: true },
-  { id: "m9", name: "Red Velvet Latte", category: "Non-Kopi", price: 22000, icon: "🧁", available: true },
-  { id: "m10", name: "Earl Grey Milk Tea", category: "Non-Kopi", price: 19000, icon: "🧋", available: true },
-  { id: "m11", name: "Lemon Mint Ice Tea", category: "Non-Kopi", price: 14000, icon: "🍋", available: true },
+  { 
+    id: "m7", 
+    name: "Matcha Latte", 
+    category: "Non-Kopi", 
+    price: 23000, 
+    image: "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
+  { 
+    id: "m8", 
+    name: "Signature Dark Choco", 
+    category: "Non-Kopi", 
+    price: 22000, 
+    image: "https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
+  { 
+    id: "m9", 
+    name: "Red Velvet Latte", 
+    category: "Non-Kopi", 
+    price: 22000, 
+    image: "https://images.unsplash.com/photo-1582293041079-7814c2f12063?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
+  { 
+    id: "m10", 
+    name: "Earl Grey Milk Tea", 
+    category: "Non-Kopi", 
+    price: 19000, 
+    image: "https://images.unsplash.com/photo-1558857563-b37cf2f74116?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
+  { 
+    id: "m11", 
+    name: "Lemon Mint Ice Tea", 
+    category: "Non-Kopi", 
+    price: 14000, 
+    image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
 
   // Kategori: Makanan
-  { id: "m12", name: "Nasi Goreng Spesial Cafe", category: "Makanan", price: 28000, icon: "🍳", available: true },
-  { id: "m13", name: "Mie Goreng Nyemek", category: "Makanan", price: 24000, icon: "🍜", available: true },
-  { id: "m14", name: "Rice Bowl Chicken Teriyaki", category: "Makanan", price: 30000, icon: "🍗", available: true },
-  { id: "m15", name: "Spaghetti Aglio Olio", category: "Makanan", price: 29000, icon: "🍝", available: true },
+  { 
+    id: "m12", 
+    name: "Nasi Goreng Spesial Cafe", 
+    category: "Makanan", 
+    price: 28000, 
+    image: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
+  { 
+    id: "m13", 
+    name: "Mie Goreng Nyemek", 
+    category: "Makanan", 
+    price: 24000, 
+    image: "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
+  { 
+    id: "m14", 
+    name: "Rice Bowl Chicken Teriyaki", 
+    category: "Makanan", 
+    price: 30000, 
+    image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
+  { 
+    id: "m15", 
+    name: "Spaghetti Aglio Olio", 
+    category: "Makanan", 
+    price: 29000, 
+    image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
 
   // Kategori: Cemilan / Snack
-  { id: "m16", name: "French Fries Crispy", category: "Snack", price: 17000, icon: "🍟", available: true },
-  { id: "m17", name: "Cireng Bumbu Rujak", category: "Snack", price: 15000, icon: "🥟", available: true },
-  { id: "m18", name: "Croissant Butter", category: "Snack", price: 20000, icon: "🥐", available: true },
-  { id: "m19", name: "Roti Bakar Coklat Keju", category: "Snack", price: 18000, icon: "🍞", available: true },
-  { id: "m20", name: "Pisang Goreng Karamel", category: "Snack", price: 16000, icon: "🍌", available: true }
+  { 
+    id: "m16", 
+    name: "French Fries Crispy", 
+    category: "Snack", 
+    price: 17000, 
+    image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
+  { 
+    id: "m17", 
+    name: "Cireng Bumbu Rujak", 
+    category: "Snack", 
+    price: 15000, 
+    image: "https://images.unsplash.com/photo-1541529086526-db283c563270?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
+  { 
+    id: "m18", 
+    name: "Croissant Butter", 
+    category: "Snack", 
+    price: 20000, 
+    image: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
+  { 
+    id: "m19", 
+    name: "Roti Bakar Coklat Keju", 
+    category: "Snack", 
+    price: 18000, 
+    image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  },
+  { 
+    id: "m20", 
+    name: "Pisang Goreng Karamel", 
+    category: "Snack", 
+    price: 16000, 
+    image: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80",
+    available: true 
+  }
 ];
 
-// --- App State Management ---
 class CafePOS {
   constructor() {
+    this.checkVersionMigration();
     this.menu = this.loadStorage("cafepos_menu", DEFAULT_MENU);
     this.settings = this.loadStorage("cafepos_settings", DEFAULT_SETTINGS);
     this.cart = this.loadStorage("cafepos_cart", []);
@@ -56,18 +197,27 @@ class CafePOS {
     
     this.currentCategory = "Semua";
     this.searchQuery = "";
-    this.currentTab = "pos"; // 'pos' | 'history' | 'manage'
+    this.currentTab = "pos";
     
     // Order info
-    this.orderType = "Dine In"; // "Dine In" | "Take Away"
+    this.orderType = "Dine In";
     this.customerName = "";
     this.tableNumber = "";
-    this.paymentMethod = "Tunai"; // "Tunai" | "QRIS" | "Transfer" | "Debit"
+    this.paymentMethod = "Tunai";
     this.cashAmount = 0;
     this.discountAmount = 0;
     this.lastTransaction = null;
     
     this.init();
+  }
+
+  checkVersionMigration() {
+    const savedVer = localStorage.getItem("cafepos_version");
+    if (savedVer !== DATA_VERSION) {
+      // Migrate to new default menu with real photos
+      localStorage.setItem("cafepos_menu", JSON.stringify(DEFAULT_MENU));
+      localStorage.setItem("cafepos_version", DATA_VERSION);
+    }
   }
 
   loadStorage(key, fallback) {
@@ -112,18 +262,15 @@ class CafePOS {
     }
   }
 
-  // --- Header & Settings Render ---
   renderHeader() {
     const cafeNameEl = document.getElementById("header-cafe-name");
     if (cafeNameEl) cafeNameEl.textContent = this.settings.cafeName;
   }
 
-  // --- Category Tabs ---
   renderCategories() {
     const container = document.getElementById("category-list");
     if (!container) return;
 
-    // Get unique categories from menu
     const categories = ["Semua", ...new Set(this.menu.map(item => item.category))];
 
     container.innerHTML = categories.map(cat => {
@@ -150,7 +297,7 @@ class CafePOS {
     });
   }
 
-  // --- Menu Grid Render ---
+  // --- Menu Grid Render with Real Product Images ---
   renderMenu() {
     const container = document.getElementById("menu-grid");
     if (!container) return;
@@ -174,37 +321,52 @@ class CafePOS {
       return;
     }
 
+    const fallbackImg = "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=400&q=80";
+
     container.innerHTML = filtered.map(item => {
       const inCart = this.cart.find(c => c.id === item.id);
       const qtyInCart = inCart ? inCart.qty : 0;
       const isAvailable = item.available !== false;
+      const imgSrc = item.image || fallbackImg;
 
       return `
         <div 
           data-id="${item.id}"
-          class="menu-card relative bg-slate-800/90 border border-slate-700/70 rounded-2xl p-3 flex flex-col justify-between transition-all tap-bounce shadow-sm overflow-hidden ${
+          class="menu-card relative bg-slate-800/90 border border-slate-700/70 rounded-2xl p-2.5 flex flex-col justify-between transition-all tap-bounce shadow-sm overflow-hidden ${
             !isAvailable ? "opacity-50 grayscale pointer-events-none" : "active:border-amber-500/50"
           }">
           
-          ${qtyInCart > 0 ? `
-            <div class="absolute top-2 right-2 bg-amber-500 text-slate-950 font-bold text-xs w-6 h-6 rounded-full flex items-center justify-center shadow-md animate-scaleIn">
-              ${qtyInCart}
-            </div>
-          ` : ""}
+          <!-- Product Image Banner -->
+          <div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-700/50 mb-2">
+            <img 
+              src="${imgSrc}" 
+              alt="${item.name}" 
+              loading="lazy"
+              onerror="this.onerror=null; this.src='${fallbackImg}'"
+              class="w-full h-full object-cover">
+            
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+            
+            <span class="absolute bottom-1.5 left-2 text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-950/80 text-slate-300 backdrop-blur-sm">
+              ${item.category}
+            </span>
 
-          <div>
-            <div class="w-12 h-12 rounded-xl bg-slate-700/50 flex items-center justify-center text-2xl mb-2.5 shadow-inner">
-              ${item.icon || "☕"}
-            </div>
-            <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-0.5">${item.category}</div>
-            <h3 class="text-sm font-bold text-slate-100 line-clamp-2 leading-tight">${item.name}</h3>
+            ${qtyInCart > 0 ? `
+              <div class="absolute top-1.5 right-1.5 bg-amber-500 text-slate-950 font-black text-xs w-6 h-6 rounded-full flex items-center justify-center shadow-lg animate-scaleIn border-2 border-slate-900">
+                ${qtyInCart}
+              </div>
+            ` : ""}
           </div>
 
-          <div class="mt-3 pt-2 border-t border-slate-700/40 flex items-center justify-between">
-            <span class="text-sm font-extrabold text-amber-400">${this.formatRupiah(item.price)}</span>
+          <div>
+            <h3 class="text-xs font-bold text-slate-100 line-clamp-2 leading-snug">${item.name}</h3>
+          </div>
+
+          <div class="mt-2 pt-2 border-t border-slate-700/40 flex items-center justify-between">
+            <span class="text-xs font-black text-amber-400 font-mono">${this.formatRupiah(item.price)}</span>
             <button 
               data-add-id="${item.id}"
-              class="add-item-btn w-8 h-8 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 flex items-center justify-center font-bold text-lg shadow-md tap-bounce">
+              class="add-item-btn w-7 h-7 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 flex items-center justify-center font-black text-base shadow-md tap-bounce">
               +
             </button>
           </div>
@@ -241,7 +403,7 @@ class CafePOS {
         id: item.id,
         name: item.name,
         price: item.price,
-        icon: item.icon,
+        image: item.image,
         category: item.category,
         qty: 1,
         note: ""
@@ -296,7 +458,6 @@ class CafePOS {
     }
   }
 
-  // --- Calculations ---
   calculateTotals() {
     const subtotal = this.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
     const totalItems = this.cart.reduce((sum, item) => sum + item.qty, 0);
@@ -321,7 +482,6 @@ class CafePOS {
     };
   }
 
-  // --- Sticky Floating Bottom Bar ---
   updateCartFloatingBar() {
     const bar = document.getElementById("floating-cart-bar");
     const countEl = document.getElementById("floating-cart-count");
@@ -363,6 +523,7 @@ class CafePOS {
     const footerActionsEl = document.getElementById("cart-footer-actions");
     
     const totals = this.calculateTotals();
+    const fallbackImg = "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=400&q=80";
 
     if (this.cart.length === 0) {
       if (itemsListEl) itemsListEl.innerHTML = "";
@@ -374,28 +535,31 @@ class CafePOS {
     if (emptyStateEl) emptyStateEl.classList.add("hidden");
     if (footerActionsEl) footerActionsEl.classList.remove("hidden");
 
-    // Render items
     itemsListEl.innerHTML = this.cart.map(item => `
       <div class="bg-slate-800/80 border border-slate-700/60 rounded-xl p-3 flex flex-col gap-2">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2.5">
-            <span class="text-xl">${item.icon || "☕"}</span>
+            <img 
+              src="${item.image || fallbackImg}" 
+              alt="${item.name}"
+              onerror="this.onerror=null; this.src='${fallbackImg}'"
+              class="w-11 h-11 rounded-lg object-cover bg-slate-700/50">
             <div>
-              <h4 class="text-sm font-bold text-slate-100">${item.name}</h4>
-              <p class="text-xs font-semibold text-amber-400">${this.formatRupiah(item.price)}</p>
+              <h4 class="text-xs font-bold text-slate-100 leading-tight">${item.name}</h4>
+              <p class="text-xs font-semibold text-amber-400 font-mono mt-0.5">${this.formatRupiah(item.price)}</p>
             </div>
           </div>
           
-          <div class="flex items-center gap-2 bg-slate-900/90 rounded-lg p-1 border border-slate-700/50">
+          <div class="flex items-center gap-1.5 bg-slate-900/90 rounded-lg p-1 border border-slate-700/50">
             <button 
               data-minus="${item.id}"
-              class="w-7 h-7 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center font-bold text-sm tap-bounce">
+              class="w-6 h-6 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center font-bold text-xs tap-bounce">
               -
             </button>
-            <span class="text-xs font-extrabold w-6 text-center text-slate-100">${item.qty}</span>
+            <span class="text-xs font-extrabold w-5 text-center text-slate-100">${item.qty}</span>
             <button 
               data-plus="${item.id}"
-              class="w-7 h-7 rounded-md bg-amber-500 hover:bg-amber-400 text-slate-950 flex items-center justify-center font-bold text-sm tap-bounce">
+              class="w-6 h-6 rounded-md bg-amber-500 hover:bg-amber-400 text-slate-950 flex items-center justify-center font-bold text-xs tap-bounce">
               +
             </button>
           </div>
@@ -413,7 +577,6 @@ class CafePOS {
       </div>
     `).join("");
 
-    // Bind item qty buttons & notes
     itemsListEl.querySelectorAll("[data-minus]").forEach(btn => {
       btn.addEventListener("click", () => this.updateItemQty(btn.dataset.minus, -1));
     });
@@ -424,10 +587,8 @@ class CafePOS {
       input.addEventListener("input", (e) => this.setItemNote(input.dataset.noteId, e.target.value));
     });
 
-    // Update totals summary
     document.getElementById("sheet-subtotal").textContent = this.formatRupiah(totals.subtotal);
     
-    // Tax & Service display
     const taxRow = document.getElementById("sheet-tax-row");
     if (this.settings.taxPercent > 0) {
       taxRow.classList.remove("hidden");
@@ -447,8 +608,6 @@ class CafePOS {
     }
 
     document.getElementById("sheet-grandtotal").textContent = this.formatRupiah(totals.grandTotal);
-
-    // Update cash shortcuts
     this.renderCashShortcuts(totals.grandTotal);
     this.updatePaymentFields(totals);
   }
@@ -465,7 +624,6 @@ class CafePOS {
       { label: "Rp 200rb", amount: 200000 }
     ].filter(s => s.amount >= grandTotal || s.label === "Uang Pas");
 
-    // Remove duplicates
     const uniqueShortcuts = [];
     const seenAmounts = new Set();
     for (const s of shortcuts) {
@@ -509,19 +667,19 @@ class CafePOS {
       if (this.cashAmount >= totals.grandTotal) {
         changeRow.classList.remove("hidden");
         changeDisplay.textContent = this.formatRupiah(change);
-        changeDisplay.className = "text-sm font-extrabold text-emerald-400";
+        changeDisplay.className = "text-sm font-extrabold text-emerald-400 font-mono";
         payBtn.disabled = false;
         payBtn.classList.remove("opacity-50", "pointer-events-none");
       } else {
         if (this.cashAmount > 0) {
           changeRow.classList.remove("hidden");
           changeDisplay.textContent = "Kurang " + this.formatRupiah(Math.abs(change));
-          changeDisplay.className = "text-sm font-extrabold text-rose-400";
+          changeDisplay.className = "text-sm font-extrabold text-rose-400 font-mono";
           payBtn.disabled = true;
           payBtn.classList.add("opacity-50", "pointer-events-none");
         } else {
           changeRow.classList.add("hidden");
-          payBtn.disabled = false; // Allow user to proceed if they haven't typed yet, auto-set to uang pas
+          payBtn.disabled = false;
           payBtn.classList.remove("opacity-50", "pointer-events-none");
         }
       }
@@ -534,13 +692,12 @@ class CafePOS {
     }
   }
 
-  // --- Complete Transaction ---
   processTransaction() {
     const totals = this.calculateTotals();
     if (totals.totalItems === 0) return;
 
     if (this.paymentMethod === "Tunai" && (this.cashAmount < totals.grandTotal)) {
-      this.cashAmount = totals.grandTotal; // Auto-set to uang pas if empty
+      this.cashAmount = totals.grandTotal;
     }
 
     const transactionId = "TRX-" + Date.now().toString().slice(-6);
@@ -566,23 +723,17 @@ class CafePOS {
       change: this.paymentMethod === "Tunai" ? Math.max(0, this.cashAmount - totals.grandTotal) : 0
     };
 
-    // Save to transactions history
     this.transactions.unshift(transaction);
     this.saveStorage("cafepos_transactions", this.transactions);
 
     this.lastTransaction = transaction;
-
-    // Clear cart
     this.clearCart();
     this.closeCartSheet();
-
-    // Show Receipt Modal
     this.showReceiptModal(transaction);
     this.renderHistory();
     this.vibrate([80, 50, 80]);
   }
 
-  // --- Receipt Modal ---
   showReceiptModal(trx) {
     const modal = document.getElementById("receipt-modal");
     if (!modal) return;
@@ -684,13 +835,11 @@ class CafePOS {
       </div>
     `;
 
-    // Setup Share WhatsApp button
     const shareWaBtn = document.getElementById("share-whatsapp-btn");
     if (shareWaBtn) {
       shareWaBtn.onclick = () => this.shareReceiptWhatsApp(trx);
     }
 
-    // Setup Print Button
     const printBtn = document.getElementById("print-receipt-btn");
     if (printBtn) {
       printBtn.onclick = () => window.print();
@@ -737,8 +886,6 @@ class CafePOS {
     if (!listEl) return;
 
     const todayStr = new Date().toLocaleDateString("id-ID", { day: '2-digit', month: 'short', year: 'numeric' });
-    
-    // Filter today's transactions
     const todayTrx = this.transactions.filter(t => t.dateFormatted === todayStr);
     
     const todayRevenue = todayTrx.reduce((sum, t) => sum + t.grandTotal, 0);
@@ -765,7 +912,7 @@ class CafePOS {
         <div class="bg-slate-800/80 border border-slate-700/60 rounded-xl p-3.5 space-y-2">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
-              <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-700 text-amber-400">#${trx.id}</span>
+              <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-700 text-amber-400 font-mono">#${trx.id}</span>
               <span class="text-xs text-slate-400">${trx.timeFormatted}</span>
             </div>
             <span class="text-xs font-bold px-2 py-0.5 rounded ${
@@ -780,7 +927,7 @@ class CafePOS {
               <p class="text-sm font-bold text-slate-100">${trx.customerName} <span class="text-xs font-normal text-slate-400">(${trx.orderType} • ${trx.tableNumber})</span></p>
               <p class="text-xs text-slate-400 line-clamp-1 mt-0.5">${itemsSummary}</p>
             </div>
-            <p class="text-sm font-extrabold text-amber-400 whitespace-nowrap">${this.formatRupiah(trx.grandTotal)}</p>
+            <p class="text-sm font-black text-amber-400 font-mono whitespace-nowrap">${this.formatRupiah(trx.grandTotal)}</p>
           </div>
 
           <div class="pt-2 border-t border-slate-700/50 flex justify-end gap-2">
@@ -807,15 +954,21 @@ class CafePOS {
     const menuListEl = document.getElementById("manage-menu-list");
     if (!menuListEl) return;
 
+    const fallbackImg = "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=400&q=80";
+
     menuListEl.innerHTML = this.menu.map(item => `
       <div class="bg-slate-800/80 border border-slate-700/60 rounded-xl p-3 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <span class="text-2xl">${item.icon || "☕"}</span>
+          <img 
+            src="${item.image || fallbackImg}" 
+            alt="${item.name}"
+            onerror="this.onerror=null; this.src='${fallbackImg}'"
+            class="w-12 h-12 rounded-xl object-cover bg-slate-700/50">
           <div>
-            <h4 class="text-sm font-bold text-slate-100">${item.name}</h4>
+            <h4 class="text-xs font-bold text-slate-100 leading-tight">${item.name}</h4>
             <div class="flex items-center gap-2 mt-0.5">
-              <span class="text-xs font-bold text-amber-400">${this.formatRupiah(item.price)}</span>
-              <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-700 text-slate-300">${item.category}</span>
+              <span class="text-xs font-black text-amber-400 font-mono">${this.formatRupiah(item.price)}</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-700 text-slate-300 font-semibold">${item.category}</span>
             </div>
           </div>
         </div>
@@ -865,7 +1018,6 @@ class CafePOS {
       });
     });
 
-    // Populate Settings form fields
     const sName = document.getElementById("setting-cafe-name");
     const sTag = document.getElementById("setting-cafe-tagline");
     const sAddr = document.getElementById("setting-address");
@@ -883,9 +1035,7 @@ class CafePOS {
     if (sFooter) sFooter.value = this.settings.receiptFooter || "";
   }
 
-  // --- Event Bindings ---
   bindEvents() {
-    // Search input
     const searchInput = document.getElementById("search-menu-input");
     if (searchInput) {
       searchInput.addEventListener("input", (e) => {
@@ -894,7 +1044,6 @@ class CafePOS {
       });
     }
 
-    // Bottom Navigation Bar tabs
     document.querySelectorAll(".nav-tab-btn").forEach(btn => {
       btn.addEventListener("click", (e) => {
         const tab = e.currentTarget.dataset.tab;
@@ -902,13 +1051,11 @@ class CafePOS {
       });
     });
 
-    // Floating cart button
     const openCartBtn = document.getElementById("floating-cart-bar");
     if (openCartBtn) {
       openCartBtn.addEventListener("click", () => this.openCartSheet());
     }
 
-    // Close cart sheet button & backdrop
     const closeCartBtn = document.getElementById("close-cart-btn");
     if (closeCartBtn) {
       closeCartBtn.addEventListener("click", () => this.closeCartSheet());
@@ -918,7 +1065,6 @@ class CafePOS {
       cartBackdrop.addEventListener("click", () => this.closeCartSheet());
     }
 
-    // Clear cart button
     const clearCartBtn = document.getElementById("clear-cart-btn");
     if (clearCartBtn) {
       clearCartBtn.addEventListener("click", () => {
@@ -928,7 +1074,6 @@ class CafePOS {
       });
     }
 
-    // Order type toggle (Dine In / Take Away)
     document.querySelectorAll(".order-type-chip").forEach(chip => {
       chip.addEventListener("click", (e) => {
         document.querySelectorAll(".order-type-chip").forEach(c => {
@@ -941,7 +1086,6 @@ class CafePOS {
       });
     });
 
-    // Customer & Table inputs
     const custInput = document.getElementById("customer-name-input");
     if (custInput) {
       custInput.addEventListener("input", (e) => this.customerName = e.target.value);
@@ -951,7 +1095,6 @@ class CafePOS {
       tableInput.addEventListener("input", (e) => this.tableNumber = e.target.value);
     }
 
-    // Table quick chips
     document.querySelectorAll(".table-chip").forEach(chip => {
       chip.addEventListener("click", (e) => {
         const val = e.currentTarget.dataset.table;
@@ -960,7 +1103,6 @@ class CafePOS {
       });
     });
 
-    // Payment method selector
     document.querySelectorAll(".payment-method-btn").forEach(btn => {
       btn.addEventListener("click", (e) => {
         document.querySelectorAll(".payment-method-btn").forEach(b => {
@@ -974,7 +1116,6 @@ class CafePOS {
       });
     });
 
-    // Cash input event
     const cashInput = document.getElementById("cash-input");
     if (cashInput) {
       cashInput.addEventListener("input", (e) => {
@@ -983,13 +1124,11 @@ class CafePOS {
       });
     }
 
-    // Process payment button
     const payBtn = document.getElementById("process-payment-btn");
     if (payBtn) {
       payBtn.addEventListener("click", () => this.processTransaction());
     }
 
-    // Close receipt modal
     const closeReceiptBtn = document.getElementById("close-receipt-btn");
     if (closeReceiptBtn) {
       closeReceiptBtn.addEventListener("click", () => this.closeReceiptModal());
@@ -999,7 +1138,6 @@ class CafePOS {
       receiptBackdrop.addEventListener("click", () => this.closeReceiptModal());
     }
 
-    // Manage: Add New Menu Item Form
     const openAddMenuBtn = document.getElementById("open-add-menu-modal");
     if (openAddMenuBtn) {
       openAddMenuBtn.addEventListener("click", () => {
@@ -1020,7 +1158,7 @@ class CafePOS {
         const name = document.getElementById("new-menu-name").value.trim();
         const category = document.getElementById("new-menu-category").value.trim();
         const price = Number(document.getElementById("new-menu-price").value) || 0;
-        const icon = document.getElementById("new-menu-icon").value.trim() || "☕";
+        const image = document.getElementById("new-menu-image").value.trim() || "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=400&q=80";
 
         if (!name || price <= 0) return alert("Mohon isi nama dan harga menu dengan benar");
 
@@ -1029,7 +1167,7 @@ class CafePOS {
           name,
           category,
           price,
-          icon,
+          image,
           available: true
         };
 
@@ -1044,7 +1182,6 @@ class CafePOS {
       });
     }
 
-    // Manage: Save Settings
     const saveSettingsBtn = document.getElementById("save-settings-btn");
     if (saveSettingsBtn) {
       saveSettingsBtn.addEventListener("click", () => {
@@ -1062,7 +1199,6 @@ class CafePOS {
       });
     }
 
-    // Manage: Backup / Export JSON
     const exportBtn = document.getElementById("export-data-btn");
     if (exportBtn) {
       exportBtn.addEventListener("click", () => {
@@ -1082,7 +1218,6 @@ class CafePOS {
       });
     }
 
-    // Manage: Restore / Import JSON
     const importInput = document.getElementById("import-file-input");
     if (importInput) {
       importInput.addEventListener("change", (e) => {
@@ -1111,7 +1246,6 @@ class CafePOS {
       });
     }
 
-    // Reset default data button
     const resetDefaultBtn = document.getElementById("reset-default-btn");
     if (resetDefaultBtn) {
       resetDefaultBtn.addEventListener("click", () => {
@@ -1127,19 +1261,15 @@ class CafePOS {
     }
   }
 
-  // --- Tab Navigation Switcher ---
   switchTab(tabId) {
     this.currentTab = tabId;
 
-    // View panes
     document.querySelectorAll(".tab-pane").forEach(pane => pane.classList.add("hidden"));
     const activePane = document.getElementById(`tab-${tabId}`);
     if (activePane) activePane.classList.remove("hidden");
 
-    // Nav buttons styling
     document.querySelectorAll(".nav-tab-btn").forEach(btn => {
       const isTarget = btn.dataset.tab === tabId;
-      const icon = btn.querySelector(".nav-icon");
       const label = btn.querySelector(".nav-label");
 
       if (isTarget) {
@@ -1159,7 +1289,6 @@ class CafePOS {
   }
 }
 
-// Start application when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
   window.posApp = new CafePOS();
 });
